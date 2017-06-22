@@ -33,6 +33,7 @@ interface searchResult {
 export class SearchController {
 
     resultsStore: any; //is an object that holds the result for child access 
+    resultsIntercom: any;
     searchInput: searchTerms;
     searchService: SearchService; 
     searchStore: SearchStore; 
@@ -46,8 +47,9 @@ export class SearchController {
         this.searchService = searchService; 
         this.searchStore = searchStore; 
         this._initSearchInput();
-        this.resultsStore = {
-            searchResults: []
+        this.resultsIntercom = {
+            searchResults: [],
+            loadingResults: false
         };
         this.passengerCountArr = _.range(10); 
     }
@@ -107,41 +109,19 @@ export class SearchController {
         let passengers = req.request.passengers; 
         passengers.adultCount = this.searchInput.numAdult; 
         passengers.childCount = this.searchInput.numChild;
-        /*
-        let req = {
-                "request": {
-                    "slice": [
-                    {
-                        "origin": "YYZ",
-                        "destination": "NYC",
-                        "date": "2017-08-31"
-                    }
-                    ],
-                    "passengers": {
-                        "adultCount": 1,
-                        "infantInLapCount": 0,
-                        "infantInSeatCount": 0,
-                        "childCount": 0,
-                        "seniorCount": 0
-                    },
-                    "solutions": 10,
-                    "refundable": false
-                }
-        };
-        */
-        console.log('search request object:', req);
-        console.log('this.searchService:', this.searchService);
+        this.resultsIntercom.loadingResults = true; 
         this.searchService.searchRequest(req).then( (resp: any) => {
-            console.log('response is:', resp, resp.data);
             this.searchResults = this.prepareSearchResults(resp.data);
             console.log('Final Search Result is:', this.searchResults);
-            this.searchStore.searchResults = this.searchResults; 
-            this.resultsStore.searchResults = this.searchResults; 
+            this.resultsIntercom.loadingResults = false; 
+            this.resultsIntercom.searchResults = this.searchResults; 
         }).catch( (resp: any) => {
+            this.resultsIntercom.loadingResults = false; 
             if (_.has(resp, 'data.error.code')) {
                 console.log('Received error code: ', resp.data.error.code);
             } 
             if (_.has(resp, 'data.error.message')) {
+                //@TODO: ideally should be shown to the user
                 console.log('Error fetching response: ', resp.data.error.message);
             } else {
                 console.log('Unknown error fetching response:', resp); 
@@ -160,7 +140,6 @@ export class SearchController {
                 let result = <searchResult>{};
                 result.saleTotal = tripOption.saleTotal; 
                 result.durationTotal = tripOption.slice[0].duration; 
-                console.log('tripOption saleTotal --', result.saleTotal);
                 result.segments = this.prepareTravelSegment(tripOption);
                 results.push(result); 
             });  

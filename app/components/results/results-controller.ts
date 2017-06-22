@@ -4,15 +4,18 @@ export class ResultsController {
 
     searchResults: any; 
     searchStore: any;
-    resultsStore: any; 
+    resultsStore: any;
+    resultsIntercom: any; 
 
     static $inject = ['$scope', '$attrs', 'searchStore'];
 
     constructor($scope: any, $attrs: ng.IAttributes, searchStore: SearchStore) {
         this.searchResults = searchStore.searchResults; 
-        console.log('this.searchResults:', this.searchResults); 
+        console.log('this.searchResults:', this.searchResults, $scope); 
+        //@TODO: plenty of scope for decoupling this -- could use event emitter.
         this.resultsStore = $scope.$parent.$ctrl.resultsStore;
-        console.log('resultsStore:', this.resultsStore);
+        this.resultsIntercom = $scope.$parent.$ctrl.resultsIntercom;
+        console.log('resultsIntercom:', this.resultsIntercom);
     }
 
     /**

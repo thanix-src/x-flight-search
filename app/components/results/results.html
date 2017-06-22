@@ -1,7 +1,16 @@
-<div component="Results" ng-if="$ctrl.resultsStore.searchResults.length > 0" class="results">
+<div component="Results" ng-if="$ctrl.resultsIntercom.searchResults.length > 0" class="results">
     <p>Flight Search Results</p>
-    <ul ng-repeat="result in $ctrl.resultsStore.searchResults track by $index">
-        <li class="sale-price">Price: {{result.saleTotal}}</li>
-        <li class="duration-total">Duration of flight: {{result.durationTotal}} mins</li>
+    <ul class="search-result" ng-repeat="result in $ctrl.resultsIntercom.searchResults track by $index">
+        <li class="sale-price">Ticket Price: {{result.saleTotal}}</li>
+        <li class="duration-total">Duration of Journey: {{result.durationTotal}} mins</li>
+        <li ng-repeat="segment in result.segments track by $index">
+            <span class="flight">{{segment.flight}}</span>
+            <ul ng-repeat="leg in segment.leg track by $index">
+                <li class="leg">{{leg.origin}} - {{leg.destination}} ({{leg.duration}} mins)</li>
+            </ul>
+        </li>
     </ul>
+</div>
+<div class="loading" ng-if="!$ctrl.resultsIntercom.searchResults.length">
+    <p ng-if="$ctrl.resultsIntercom.loadingResults">Loading Results..</p>
 </div>
