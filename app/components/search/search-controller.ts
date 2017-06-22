@@ -38,6 +38,7 @@ export class SearchController {
     searchStore: SearchStore; 
     searchResults: searchResult[]; 
     tripData: any; 
+    passengerCountArr: number[];
 
     static $inject = ['$scope', '$attrs', 'searchService', 'searchStore'];
 
@@ -48,6 +49,7 @@ export class SearchController {
         this.resultsStore = {
             searchResults: []
         };
+        this.passengerCountArr = _.range(10); 
     }
 
     /**
@@ -66,10 +68,46 @@ export class SearchController {
     }
 
     /**
+     * @description initialize request object
+     */
+    private _initSearchRequestObj = () => {
+        //default request object, assumes some default values
+        return {
+                "request": {
+                    "slice": [
+                    {
+                        "origin": "",
+                        "destination": "",
+                        "date": ""
+                    }
+                    ],
+                    "passengers": {
+                        "adultCount": 0,
+                        "infantInLapCount": 0,
+                        "infantInSeatCount": 0,
+                        "childCount": 0,
+                        "seniorCount": 0
+                    },
+                    "solutions": 10,
+                    "refundable": false
+                }
+        };
+    }
+
+    /**
      * @description search for flights when users hits the search button
      */
     public searchFlights = () => {
         console.log('searching for flights with:', this.searchInput);
+        let req = this._initSearchRequestObj();
+        let slice = req.request.slice[0]; 
+        slice.origin = this.searchInput.origin; 
+        slice.destination = this.searchInput.destination; 
+        slice.date = this.searchInput.departureDate; 
+        let passengers = req.request.passengers; 
+        passengers.adultCount = this.searchInput.numAdult; 
+        passengers.childCount = this.searchInput.numChild;
+        /*
         let req = {
                 "request": {
                     "slice": [
@@ -86,10 +124,12 @@ export class SearchController {
                         "childCount": 0,
                         "seniorCount": 0
                     },
-                    "solutions": 20,
+                    "solutions": 10,
                     "refundable": false
                 }
         };
+        */
+        console.log('search request object:', req);
         console.log('this.searchService:', this.searchService);
         this.searchService.searchRequest(req).then( (resp: any) => {
             console.log('response is:', resp, resp.data);
