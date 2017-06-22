@@ -25,6 +25,7 @@ npm run setup
 ```
 npm run serve
 ```
+and hit `http://localhost:8080/ to check the app
 
 ## package the application 
 
@@ -36,4 +37,4 @@ npm run build
 
 * No `tests` are setup yet
 * This is the very beginning, so you are likely to see more ground-up sort of changes. 
-
+* Limited CSS 
