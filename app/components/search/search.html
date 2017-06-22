@@ -1,0 +1,14 @@
+<div component="Search" class="search">
+    <p>Search for the best value flights</p>
+    <form class="flight-search-form">
+        <input type="text" placeholder="ORIGIN" name="input-origin" ng-model="$ctrl.searchInput.origin" />
+        <input type="text" placeholder="DESTINATION" name="input-dest" ng-model="$ctrl.searchInput.destination" />
+        <input type="text" placeholder="YYYY-MM-DD" name="input-departure-date" ng-model="$ctrl.searchInput.departureDate" />
+        <input type="text" placeholder="YYYY-MM-DD" name="input-return-date" ng-model="$ctrl.searchInput.returnDate" />
+        
+        <button class="btn btn-default pull-right" ng-click="$ctrl.searchFlights()" aria-haspopup="true" aria-expanded="true">
+            Search
+        </button>   
+    </form>
+    <results></results>
+</div>

@@ -1,0 +1,7 @@
+<div component="Results" ng-if="$ctrl.resultsStore.searchResults.length > 0" class="results">
+    <p>Flight Search Results</p>
+    <ul ng-repeat="result in $ctrl.resultsStore.searchResults track by $index">
+        <li class="sale-price">Price: {{result.saleTotal}}</li>
+        <li class="duration-total">Duration of flight: {{result.durationTotal}} mins</li>
+    </ul>
+</div>
